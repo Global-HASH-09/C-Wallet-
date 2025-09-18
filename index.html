@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>C-WALLET</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #FFD700;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+    }
+    .balance-section {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 10px #FFD70055;
+    }
+    .balance {
+      font-size: 2em;
+      font-weight: bold;
+    }
+    .label {
+      margin-top: 5px;
+      font-size: 1em;
+      color: #ccc;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+    .action {
+      text-align: center;
+    }
+    .action-circle {
+      width: 60px;
+      height: 60px;
+      background-color: #FFD700;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+    .notice {
+      margin-top: 20px;
+      background-color: #222;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+      font-size: 0.95em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="balance-section">
+      <div class="balance">$7500 USDT</div>
+      <div class="label">رصيد الحساب</div>
+    </div>
+
+    <div class="actions">
+      <div class="action">
+        <div class="action-circle" onclick="showNotice()">💸</div>
+        <div>سحب</div>
+      </div>
+      <div class="action">
+        <div class="action-circle">📥</div>
+        <div>استقبال</div>
+      </div>
+      <div class="action">
+        <div class="action-circle">🔄</div>
+        <div>تبديل</div>
+      </div>
+      <div class="action">
+        <div class="action-circle">💱</div>
+        <div>شراء/بيع</div>
+      </div>
+    </div>
+
+    <div class="notice" id="withdrawNotice">
+      ⚠️ $122 USDT مطلوبة لفتح الدفع. بعد الدفع، سيتم إرسال 90 ETH إلى عنوانك خلال 30 ثانية.
+    </div>
+  </div>
+
+  <script>
+    function showNotice() {
+      document.getElementById('withdrawNotice').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
