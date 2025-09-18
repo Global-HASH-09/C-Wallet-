@@ -1,106 +1,196 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>C-WALLET</title>
+  <title>Wallet Clone - Test Only</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #000;
-      color: #FFD700;
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; margin: 0; padding: 0; }
+    .header { display: flex; align-items: center; padding: 16px; }
+    .bell { width: 32px; height: 32px; background: #f7f7f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
+    .bell-dot { position: absolute; top: 7px; right: 6px; width: 8px; height: 8px; background: #c1f24b; border-radius: 50%; }
+    .menu { width: 32px; height: 32px; background: #f7f7f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+    .profile { width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #ffb369, #b40039); border-radius: 50%; margin-right: auto; }
+    .email { font-size: 18px; color: #222; margin: 0 14px; }
+    .search-bar { margin: 14px 14px 0 14px; background: #f3f3f3; border-radius: 12px; padding: 12px; color: #888; border: none; width: calc(100% - 28px); }
+    .section { margin: 18px 14px; }
+    .wallet-balance { display: flex; align-items: center; justify-content: space-between; }
+    .wallet-balance > div { font-size: 22px; color: #222; }
+    .wallet-balance .balance { font-weight: bold; font-size: 32px; color: #222; }
+    .wallet-balance .percent { color: #32df4c; font-size: 18px; margin-left: 6px; }
+    .actions { display: flex; justify-content: space-between; margin: 26px 0 12px 0; }
+    .action-btn { 
+      background: #e4e4e4; 
+      color: #222; 
+      border: none; 
+      border-radius: 50%; 
+      width: 62px; 
+      height: 62px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 16px;
+      cursor: not-allowed;
+      margin: 0 5px;
     }
-    .container {
-      max-width: 400px;
-      margin: auto;
-      padding: 20px;
-    }
-    .balance-section {
-      background-color: #111;
-      padding: 20px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 10px #FFD70055;
-    }
-    .balance {
-      font-size: 2em;
-      font-weight: bold;
-    }
-    .label {
-      margin-top: 5px;
-      font-size: 1em;
-      color: #ccc;
-    }
-    .actions {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 20px;
-    }
-    .action {
-      text-align: center;
-    }
-    .action-circle {
-      width: 60px;
-      height: 60px;
-      background-color: #FFD700;
-      color: #000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: auto;
-      font-size: 1.2em;
+    .action-btn.withdrawal {
+      background: #2ecf46;
+      color: #fff;
       cursor: pointer;
+      font-weight: bold;
+      border: 2px solid #1f8d34;
     }
-    .notice {
-      margin-top: 20px;
-      background-color: #222;
-      padding: 15px;
-      border-radius: 8px;
+    .action-label { margin-top: 4px; font-size: 15px; }
+    .history { background: #f7f7f7; border-radius: 13px; padding: 10px 16px; margin: 14px 0; font-size: 17px; }
+    .cards { display: flex; gap: 12px; margin-bottom: 22px; }
+    .card { 
+      background: #fff; 
+      border-radius: 18px; 
+      box-shadow: 0 1px 5px rgba(0,0,0,0.04); 
+      padding: 22px 14px; 
+      flex: 1; 
+      text-align: center; 
+      font-size: 17px;
+      border: 1px solid #ececec;
+    }
+    .loan { font-size: 19px; font-weight: bold; color: #222; }
+    .amount { font-size: 21px; margin: 7px 0 2px 0; color: #222; }
+    .footer { 
+      position: fixed; 
+      width: 100%; 
+      bottom: 0; 
+      left: 0; 
+      background: #fff; 
+      display: flex; 
+      justify-content: space-around; 
+      align-items: center; 
+      border-top: 1px solid #ececec;
+      padding: 7px 0 4px 0;
+      z-index: 10;
+    }
+    .footer-btn {
+      display: flex; flex-direction: column; align-items: center; color: #b5b5b5; font-size: 14px; text-decoration: none; 
+    }
+    .footer-btn.active { color: #222; }
+    .footer-center {
+      background: #d3f96e; 
+      width: 54px; 
+      height: 54px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-top: -30px;
+      border: 2px solid #c1f24b;
+      font-size: 30px;
+    }
+    .modal {
+      display: none; 
+      position: fixed; 
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.28);
+      align-items: center; justify-content: center;
+      z-index: 999;
+    }
+    .modal-content {
+      background: #fff; 
+      padding: 35px 25px; 
+      border-radius: 15px; 
       text-align: center;
-      display: none;
-      font-size: 0.95em;
+      font-size: 20px;
+      color: #c0141a;
+      font-weight: bold;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.09);
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <div class="balance-section">
-      <div class="balance">$7500 USDT</div>
-      <div class="label">رصيد الحساب</div>
+  <div class="header">
+    <div class="bell">
+      <svg width="20" height="20" fill="#bdbdbd"><circle cx="10" cy="13" r="7" /></svg>
+      <span class="bell-dot"></span>
     </div>
-
+    <div class="menu">
+      <svg width="22" height="22" fill="#bdbdbd"><rect width="22" height="3" y="4"/><rect width="22" height="3" y="10"/><rect width="22" height="3" y="16"/></svg>
+    </div>
+    <span class="email">f***@gm...</span>
+    <div class="profile"></div>
+  </div>
+  <input class="search-bar" type="text" placeholder="البحث عن أنشطة الحساب والأ...">
+  <div class="section">
+    <div style="color:#888; font-size:18px; margin-bottom:7px;">محفظة الحساب</div>
+    <div class="wallet-balance">
+      <div class="percent">($32) 6864% ↑</div>
+      <div class="balance">$7,500 <span style="font-size:20px; color:#888;">USDT</span></div>
+    </div>
     <div class="actions">
-      <div class="action">
-        <div class="action-circle" onclick="showNotice()">💸</div>
-        <div>سحب</div>
-      </div>
-      <div class="action">
-        <div class="action-circle">📥</div>
-        <div>استقبال</div>
-      </div>
-      <div class="action">
-        <div class="action-circle">🔄</div>
-        <div>تبديل</div>
-      </div>
-      <div class="action">
-        <div class="action-circle">💱</div>
-        <div>شراء/بيع</div>
-      </div>
+      <button class="action-btn" disabled>
+        <div><svg width="28" height="28" fill="#2ecf46"><rect width="20" height="5" x="4" y="12"/></svg></div>
+        <div class="action-label">شراء/بيع</div>
+      </button>
+      <button class="action-btn" disabled>
+        <div><svg width="28" height="28" fill="#2ecf46"><rect width="20" height="5" x="4" y="12" transform="rotate(90 14 14)"/></svg></div>
+        <div class="action-label">تبديل</div>
+      </button>
+      <button class="action-btn" disabled>
+        <div><svg width="28" height="28" fill="#2ecf46"><polygon points="14,24 24,8 4,8"/></svg></div>
+        <div class="action-label">استقبال</div>
+      </button>
+      <button class="action-btn withdrawal" id="withdrawBtn">
+        <div><svg width="28" height="28" fill="#fff"><polygon points="14,4 24,20 4,20"/></svg></div>
+        <div class="action-label">دفع</div>
+      </button>
     </div>
-
-    <div class="notice" id="withdrawNotice">
-      ⚠️ $122 USDT مطلوبة لفتح الدفع. بعد الدفع، سيتم إرسال 90 ETH إلى عنوانك خلال 30 ثانية.
+    <div class="history">
+      <span>قبل شهر</span>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="loan">قروض</div>
+        <div class="amount">$10,000</div>
+        <div style="color:#888; font-size:15px;">متاح للإقراض</div>
+      </div>
+      <div class="card">
+        <div class="loan">مدخرات</div>
+        <div class="amount">حتى %10..</div>
+        <div style="color:#888; font-size:15px;">ابدأ بالكسب ا...</div>
+      </div>
     </div>
   </div>
-
+  <div class="footer">
+    <a href="#" class="footer-btn">
+      <svg width="26" height="26" fill="#b5b5b5"><circle cx="13" cy="13" r="12"/></svg>
+      الرئيسية
+    </a>
+    <a href="#" class="footer-btn">
+      <svg width="26" height="26" fill="#b5b5b5"><rect x="4" y="4" width="18" height="18" rx="6"/></svg>
+      الأصول
+    </a>
+    <div class="footer-center">
+      <span style="font-size: 32px; color: #222;">↕</span>
+    </div>
+    <a href="#" class="footer-btn">
+      <svg width="26" height="26" fill="#b5b5b5"><circle cx="13" cy="8" r="5"/><rect x="8" y="14" width="10" height="8" rx="3"/></svg>
+      جهات
+    </a>
+    <a href="#" class="footer-btn">
+      <svg width="26" height="26" fill="#b5b5b5"><rect width="18" height="18" x="4" y="4" rx="5"/></svg>
+      اكتشف
+    </a>
+  </div>
+  <div class="modal" id="modal">
+    <div class="modal-content">
+    مطلوب 122 دولارًا أمريكيًا لفتح الدفع
+    </div>
+  </div>
   <script>
-    function showNotice() {
-      document.getElementById('withdrawNotice').style.display = 'block';
-    }
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const modal = document.getElementById('modal');
+    withdrawBtn.addEventListener('click', function() {
+      modal.style.display = 'flex';
+      setTimeout(() => { modal.style.display = 'none'; }, 3000);
+    });
   </script>
-
 </body>
 </html>
