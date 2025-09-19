@@ -1,196 +1,108 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Wallet Clone - Test Only</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C-Wallet Certificate of Final Release</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; margin: 0; padding: 0; }
-    .header { display: flex; align-items: center; padding: 16px; }
-    .bell { width: 32px; height: 32px; background: #f7f7f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; }
-    .bell-dot { position: absolute; top: 7px; right: 6px; width: 8px; height: 8px; background: #c1f24b; border-radius: 50%; }
-    .menu { width: 32px; height: 32px; background: #f7f7f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
-    .profile { width: 32px; height: 32px; background: radial-gradient(circle at 30% 30%, #ffb369, #b40039); border-radius: 50%; margin-right: auto; }
-    .email { font-size: 18px; color: #222; margin: 0 14px; }
-    .search-bar { margin: 14px 14px 0 14px; background: #f3f3f3; border-radius: 12px; padding: 12px; color: #888; border: none; width: calc(100% - 28px); }
-    .section { margin: 18px 14px; }
-    .wallet-balance { display: flex; align-items: center; justify-content: space-between; }
-    .wallet-balance > div { font-size: 22px; color: #222; }
-    .wallet-balance .balance { font-weight: bold; font-size: 32px; color: #222; }
-    .wallet-balance .percent { color: #32df4c; font-size: 18px; margin-left: 6px; }
-    .actions { display: flex; justify-content: space-between; margin: 26px 0 12px 0; }
-    .action-btn { 
-      background: #e4e4e4; 
-      color: #222; 
-      border: none; 
-      border-radius: 50%; 
-      width: 62px; 
-      height: 62px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 16px;
-      cursor: not-allowed;
-      margin: 0 5px;
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #333;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .action-btn.withdrawal {
-      background: #2ecf46;
-      color: #fff;
-      cursor: pointer;
+    .logo {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logo img {
+      height: 60px;
+      margin-right: 15px;
+    }
+    .logo h1 {
+      font-size: 24px;
+      color: #007BFF;
+      margin: 0;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    .section h2 {
+      font-size: 18px;
+      border-bottom: 2px solid #007BFF;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+    .info {
+      margin-left: 20px;
+    }
+    .info p {
+      margin: 5px 0;
+    }
+    .verified {
+      color: #007BFF;
       font-weight: bold;
-      border: 2px solid #1f8d34;
     }
-    .action-label { margin-top: 4px; font-size: 15px; }
-    .history { background: #f7f7f7; border-radius: 13px; padding: 10px 16px; margin: 14px 0; font-size: 17px; }
-    .cards { display: flex; gap: 12px; margin-bottom: 22px; }
-    .card { 
-      background: #fff; 
-      border-radius: 18px; 
-      box-shadow: 0 1px 5px rgba(0,0,0,0.04); 
-      padding: 22px 14px; 
-      flex: 1; 
-      text-align: center; 
-      font-size: 17px;
-      border: 1px solid #ececec;
+    .address {
+      font-family: monospace;
+      background: #f9f9f9;
+      padding: 5px;
+      border-radius: 4px;
+      display: inline-block;
     }
-    .loan { font-size: 19px; font-weight: bold; color: #222; }
-    .amount { font-size: 21px; margin: 7px 0 2px 0; color: #222; }
-    .footer { 
-      position: fixed; 
-      width: 100%; 
-      bottom: 0; 
-      left: 0; 
-      background: #fff; 
-      display: flex; 
-      justify-content: space-around; 
-      align-items: center; 
-      border-top: 1px solid #ececec;
-      padding: 7px 0 4px 0;
-      z-index: 10;
-    }
-    .footer-btn {
-      display: flex; flex-direction: column; align-items: center; color: #b5b5b5; font-size: 14px; text-decoration: none; 
-    }
-    .footer-btn.active { color: #222; }
-    .footer-center {
-      background: #d3f96e; 
-      width: 54px; 
-      height: 54px; 
-      border-radius: 50%; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      margin-top: -30px;
-      border: 2px solid #c1f24b;
-      font-size: 30px;
-    }
-    .modal {
-      display: none; 
-      position: fixed; 
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.28);
-      align-items: center; justify-content: center;
-      z-index: 999;
-    }
-    .modal-content {
-      background: #fff; 
-      padding: 35px 25px; 
-      border-radius: 15px; 
-      text-align: center;
-      font-size: 20px;
-      color: #c0141a;
-      font-weight: bold;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="bell">
-      <svg width="20" height="20" fill="#bdbdbd"><circle cx="10" cy="13" r="7" /></svg>
-      <span class="bell-dot"></span>
-    </div>
-    <div class="menu">
-      <svg width="22" height="22" fill="#bdbdbd"><rect width="22" height="3" y="4"/><rect width="22" height="3" y="10"/><rect width="22" height="3" y="16"/></svg>
-    </div>
-    <span class="email">f***@gm...</span>
-    <div class="profile"></div>
+
+  <div class="logo">
+    <img src="your-logo-path-here.png" alt="CWallet Logo">
+    <h1>CWallet <span class="verified">✔️</span></h1>
   </div>
-  <input class="search-bar" type="text" placeholder="البحث عن أنشطة الحساب والأ...">
+
+  <h2>Certificate of Final Release</h2>
+  <p><strong>Date Issued:</strong> September 19, 2025</p>
+  <p><strong>Transaction Reference ID:</strong> CW-REL-095-7107</p>
+
   <div class="section">
-    <div style="color:#888; font-size:18px; margin-bottom:7px;">محفظة الحساب</div>
-    <div class="wallet-balance">
-      <div class="percent">($32) 6864% ↑</div>
-      <div class="balance">$7,500 <span style="font-size:20px; color:#888;">USDT</span></div>
-    </div>
-    <div class="actions">
-      <button class="action-btn" disabled>
-        <div><svg width="28" height="28" fill="#2ecf46"><rect width="20" height="5" x="4" y="12"/></svg></div>
-        <div class="action-label">شراء/بيع</div>
-      </button>
-      <button class="action-btn" disabled>
-        <div><svg width="28" height="28" fill="#2ecf46"><rect width="20" height="5" x="4" y="12" transform="rotate(90 14 14)"/></svg></div>
-        <div class="action-label">تبديل</div>
-      </button>
-      <button class="action-btn" disabled>
-        <div><svg width="28" height="28" fill="#2ecf46"><polygon points="14,24 24,8 4,8"/></svg></div>
-        <div class="action-label">استقبال</div>
-      </button>
-      <button class="action-btn withdrawal" id="withdrawBtn">
-        <div><svg width="28" height="28" fill="#fff"><polygon points="14,4 24,20 4,20"/></svg></div>
-        <div class="action-label">دفع</div>
-      </button>
-    </div>
-    <div class="history">
-      <span>قبل شهر</span>
-    </div>
-    <div class="cards">
-      <div class="card">
-        <div class="loan">قروض</div>
-        <div class="amount">$10,000</div>
-        <div style="color:#888; font-size:15px;">متاح للإقراض</div>
-      </div>
-      <div class="card">
-        <div class="loan">مدخرات</div>
-        <div class="amount">حتى %10..</div>
-        <div style="color:#888; font-size:15px;">ابدأ بالكسب ا...</div>
-      </div>
+    <h2>Recipient Information</h2>
+    <div class="info">
+      <p><strong>Receiving Address:</strong> <span class="address">0x7107A5F411586c95140FAF48475370022a29a17a</span> <span class="verified">✔️</span></p>
+      <p><strong>Network:</strong> BEP20</p>
+      <p><strong>Asset Type:</strong> USDT (Tether)</p>
+      <p><strong>Amount:</strong> $7,500 USDT</p>
     </div>
   </div>
+
+  <div class="section">
+    <h2>Release Status</h2>
+    <div class="info">
+      <p><strong>Current Status:</strong> Pending Final Unlock</p>
+      <p><strong>Unlock Requirement:</strong> $200 USDT deposit required to initiate final release</p>
+      <p><strong>Release Timing:</strong> Funds will be released 2 seconds after confirmation of $200 USDT deposit</p>
+      <p><strong>Unlock Indicator:</strong> 🔓 Unlock in progress</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Certification</h2>
+    <div class="info">
+      <p>This document certifies that the above-mentioned wallet address is scheduled to receive a final release of <strong>$7,500 USDT (BEP20)</strong> upon completion of the unlocking procedure. The release will be executed automatically and irrevocably once unlocking deposit is confirmed.</p>
+    </div>
+  </div>
+
   <div class="footer">
-    <a href="#" class="footer-btn">
-      <svg width="26" height="26" fill="#b5b5b5"><circle cx="13" cy="13" r="12"/></svg>
-      الرئيسية
-    </a>
-    <a href="#" class="footer-btn">
-      <svg width="26" height="26" fill="#b5b5b5"><rect x="4" y="4" width="18" height="18" rx="6"/></svg>
-      الأصول
-    </a>
-    <div class="footer-center">
-      <span style="font-size: 32px; color: #222;">↕</span>
-    </div>
-    <a href="#" class="footer-btn">
-      <svg width="26" height="26" fill="#b5b5b5"><circle cx="13" cy="8" r="5"/><rect x="8" y="14" width="10" height="8" rx="3"/></svg>
-      جهات
-    </a>
-    <a href="#" class="footer-btn">
-      <svg width="26" height="26" fill="#b5b5b5"><rect width="18" height="18" x="4" y="4" rx="5"/></svg>
-      اكتشف
-    </a>
+    <p><strong>Authorized by:</strong> CWallet Settlement Authority</p>
+    <p><strong>Division:</strong> Digital Asset Clearance Division</p>
   </div>
-  <div class="modal" id="modal">
-    <div class="modal-content">
-    مطلوب 122 دولارًا أمريكيًا لفتح الدفع
-    </div>
-  </div>
-  <script>
-    const withdrawBtn = document.getElementById('withdrawBtn');
-    const modal = document.getElementById('modal');
-    withdrawBtn.addEventListener('click', function() {
-      modal.style.display = 'flex';
-      setTimeout(() => { modal.style.display = 'none'; }, 3000);
-    });
-  </script>
+
 </body>
 </html>
